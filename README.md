@@ -31,15 +31,11 @@ Continuous deployment: https://ci.simplcommerce.com
 
 - Update the connection string in `src/SimplCommerce.WebHost/appsettings.json` if it's needed. In case you are using SQL LocalDB, change the connection string to:
 
-    ```json
-    {
-    `"DefaultConnection": "Server=.;Database=SimplCommerce;Trusted_Connection=True;TrustServerCertificate=true"`
-    }
-  - If you are using Visual Studio LocalDB, change it to:
-    ```json
-    {
+```json
+{
+
     `"DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=SimplCommerce;Trusted_Connection=True;TrustServerCertificate=true;MultipleActiveResultSets=true"`
-    }
+ }
 - Ensure you have a database named `SimplCommerce` created in your SQL instance, or change the `Database` name in the connection string to match your environment.
 - Build the whole solution.
 - In Solution Explorer, make sure that SimplCommerce.WebHost is selected as the Startup Project
