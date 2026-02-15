@@ -29,8 +29,8 @@ Continuous deployment: https://ci.simplcommerce.com
 
 #### Steps to run
 
-- Update the connection string: Open `appsettings.json` in `src/SimplCommerce.WebHost`. 
-  - The default is configured for a local SQL Server. 
+- Update the connection string in `src/SimplCommerce.WebHost/appsettings.json` if it's needed. In case you are using SQL LocalDB, change the connection string to:
+
     ```json
     {
     `"DefaultConnection": "Server=.;Database=SimplCommerce;Trusted_Connection=True;TrustServerCertificate=true"`
