@@ -29,14 +29,14 @@ Continuous deployment: https://ci.simplcommerce.com
 
 #### Steps to run
 
-- Update the connection string: Open `appsettings.json` in `src/SimplCommerce.WebHost`. 
-  - The default is configured for a local SQL Server. 
+- Update the connection string: Open appsettings.json in src/SimplCommerce.WebHost. 
+  The default is configured for a local SQL Server
     ```json
     {
       "DefaultConnection": "Server=.;Database=SimplCommerce;Trusted_Connection=True;TrustServerCertificate=true"
     }
     ```
-  - If you are using Visual Studio LocalDB, change it to:
+  If you are using Visual Studio LocalDB, change it to
     ```json
     {
       "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=SimplCommerce;Trusted_Connection=True;TrustServerCertificate=true;MultipleActiveResultSets=true"
