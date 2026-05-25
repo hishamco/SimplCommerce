@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ namespace SimplCommerce.Module.News.Areas.News.Controllers
         private readonly INewsItemService _newsItemService;
         private readonly IMediaService _mediaService;
         private readonly IWorkContext _workContext;
+        private readonly HtmlSanitizer _htmlSanitizer = new();
 
         public NewsItemApiController(IRepository<NewsItem> newsItemRepository, INewsItemService newsItemService, IMediaService mediaService, IWorkContext workContext)
         {
@@ -127,8 +129,8 @@ namespace SimplCommerce.Module.News.Areas.News.Controllers
                 MetaTitle = model.MetaTitle,
                 MetaKeywords = model.MetaKeywords,
                 MetaDescription = model.MetaDescription,
-                ShortContent = model.ShortContent,
-                FullContent = model.FullContent,
+                ShortContent = _htmlSanitizer.Sanitize(model.ShortContent),
+                FullContent = _htmlSanitizer.Sanitize(model.FullContent),
                 IsPublished = model.IsPublished,
                 CreatedBy = currentUser,
                 LatestUpdatedBy = currentUser
@@ -172,8 +174,8 @@ namespace SimplCommerce.Module.News.Areas.News.Controllers
             newsItem.MetaTitle = model.MetaTitle;
             newsItem.MetaKeywords = model.MetaKeywords;
             newsItem.MetaDescription = model.MetaDescription;
-            newsItem.ShortContent = model.ShortContent;
-            newsItem.FullContent = model.FullContent;
+            newsItem.ShortContent = _htmlSanitizer.Sanitize(model.ShortContent);
+            newsItem.FullContent = _htmlSanitizer.Sanitize(model.FullContent);
             newsItem.IsPublished = model.IsPublished;
             newsItem.LatestUpdatedOn = DateTimeOffset.Now;
             newsItem.LatestUpdatedBy = currentUser;
