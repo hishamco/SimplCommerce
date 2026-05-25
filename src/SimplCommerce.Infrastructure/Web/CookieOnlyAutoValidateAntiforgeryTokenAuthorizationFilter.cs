@@ -1,37 +1,34 @@
-﻿//using System;
-//using Microsoft.AspNetCore.Antiforgery;
-//using Microsoft.AspNetCore.Authentication.JwtBearer;
-//using Microsoft.AspNetCore.Mvc.Filters;
-//using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-//using Microsoft.Extensions.Logging;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
 
-//namespace SimplCommerce.Infrastructure.Web
-//{
-//    public class CookieOnlyAutoValidateAntiforgeryTokenAuthorizationFilter : AutoValidateAntiforgeryTokenAuthorizationFilter
-//    {
-//        public CookieOnlyAutoValidateAntiforgeryTokenAuthorizationFilter(IAntiforgery antiforgery, ILoggerFactory loggerFactory)
-//            : base(antiforgery, loggerFactory)
-//        {
-//        }
+namespace SimplCommerce.Infrastructure.Web
+{
+    public class CookieOnlyAutoValidateAntiforgeryTokenAuthorizationFilter(IAntiforgery antiforgery) : IAsyncAuthorizationFilter
+    {
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        {
+            var httpContext = context.HttpContext;
+            if (HttpMethods.IsGet(httpContext.Request.Method) ||
+                HttpMethods.IsHead(httpContext.Request.Method) ||
+                HttpMethods.IsOptions(httpContext.Request.Method) ||
+                HttpMethods.IsTrace(httpContext.Request.Method))
+            {
+                return;
+            }
 
-//        protected override bool ShouldValidate(AuthorizationFilterContext context)
-//        {
-//            if (context == null)
-//            {
-//                throw new ArgumentNullException(nameof(context));
-//            }
+            if (!httpContext.Request.Path.StartsWithSegments("/api"))
+            {
+                return;
+            }
 
-//            if (!context.HttpContext.Request.Path.StartsWithSegments("/api"))
-//            {
-//                return false;
-//            }
+            if (httpContext.User.Identity?.AuthenticationType != "Identity.Application")
+            {
+                return;
+            }
 
-//            if (context.HttpContext.User.Identity?.AuthenticationType != "Identity.Application")
-//            {
-//                return false;
-//            }
-
-//            return base.ShouldValidate(context);
-//        }
-//    }
-//}
+            await antiforgery.ValidateRequestAsync(httpContext);
+        }
+    }
+}

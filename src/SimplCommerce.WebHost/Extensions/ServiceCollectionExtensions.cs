@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using SimplCommerce.Infrastructure;
 using SimplCommerce.Infrastructure.Modules;
+using SimplCommerce.Infrastructure.Web;
 using SimplCommerce.Infrastructure.Web.ModelBinders;
 using SimplCommerce.Module.Core.Data;
 using SimplCommerce.Module.Core.Extensions;
@@ -59,10 +60,13 @@ namespace SimplCommerce.WebHost.Extensions
         public static IServiceCollection AddCustomizedMvc(this IServiceCollection services, IList<ModuleInfo> modules)
         {
             var mvcBuilder = services
-                .AddMvc(o =>
+                .AddMvc(options =>
                 {
-                    o.EnableEndpointRouting = false;
-                    o.ModelBinderProviders.Insert(0, new InvariantDecimalModelBinderProvider());
+                    options.EnableEndpointRouting = false;
+                    options.ModelBinderProviders.Insert(0, new InvariantDecimalModelBinderProvider());
+
+                    options.Filters.Add<CookieOnlyAutoValidateAntiforgeryTokenAuthorizationFilter>();
+
                 })
                 .AddViewLocalization()
                 .AddModelBindingMessagesLocalizer(services)
